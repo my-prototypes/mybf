@@ -94,7 +94,7 @@ def register():
         if error is None:
             # the name is available, store it in the database and go to the login page
             hash_and_salted_password = generate_password_hash(password)
-            usuario = User(username=username, password=hash_and_salted_password)
+            usuario = User(name=name, username=username, email=email, password=hash_and_salted_password)
             userDAO.create_user(user=usuario)
             return redirect(url_for("login"))
 
@@ -131,4 +131,10 @@ def dashboard_page():
 def profile():
     usuario = userDAO.read_user_by_username(username=session['username'])
     return render_template("dashboard/profile.html", usuario = session['username'], 
-            profilePic="", titulo="Profile", nome=usuario.username, id=str(usuario.id), email=usuario.username)
+            profilePic="", titulo="Profile", nome=usuario.name, id=str(usuario.id), email=usuario.email)
+
+# Recria as tabelas do banco
+#with app.app_context():
+#    print('Cria as tabelas do banco')
+#    db.create_all()
+#    print('Tabelas criadas com sucesso!')
