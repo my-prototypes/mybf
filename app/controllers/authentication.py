@@ -1,13 +1,13 @@
 from flask import Blueprint
 from flask import session, request, redirect, url_for, render_template, flash
-from .forms import LoginForm
+from app.forms import LoginForm
 from werkzeug.security import check_password_hash, generate_password_hash
-from .extensions import db, login_manager
+from app.extensions import db, login_manager
 from flask_login import logout_user
 
 # Evita importacao de dependencia circular
-from .dao import UserDAO
-from .models import User
+from ..dao import UserDAO
+from ..models import User
 
 userDAO = UserDAO(db)
 

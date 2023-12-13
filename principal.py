@@ -3,10 +3,9 @@ from flask import Flask, send_from_directory, render_template, request, url_for,
 from flask_login import login_required
 from flask import session
 from app.extensions import db, login_manager
-from app.dashboard import dashboard_bp
-from app.authentication import auth_bp
-from app.usuarios import usuarios_bp
-import urllib
+from app.controllers.dashboard import dashboard_bp
+from app.controllers.authentication import auth_bp
+from app.controllers.usuarios import usuarios_bp
 
 app = Flask(__name__, template_folder='app/templates')
 

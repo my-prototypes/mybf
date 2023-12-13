@@ -1,10 +1,10 @@
 from flask import Blueprint
 from flask import session, redirect, url_for, render_template
 from flask_login import login_required
-from .extensions import db
+from app.extensions import db
 
 # Evita importacao de dependencia circular
-from .dao import UserDAO
+from ..dao import UserDAO
 
 userDAO = UserDAO(db)
 
