@@ -53,5 +53,7 @@ def create_tables():
         db.create_all()
         print('Tabelas criadas com sucesso!')
 
+create_tables()
+
 if __name__=='__main__':
     app.run()

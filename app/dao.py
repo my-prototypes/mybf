@@ -26,3 +26,47 @@ class UserDAO:
 
     def list_users(self):
         return User.query.all()
+
+    # image = Image(name="MyImage.jpg", type_image=1)
+    # type 1 - profile
+    # type 2 - arquivos 
+    # user.images.append(image)
+    def add_image_to_user(self, user_id, image):
+        user = self.user_by_id(user_id)
+        image.user = user
+        self.db.session.add(image)
+        self.db.session.commit()
+        self.update_user(user)
+
+    def get_all_images_for_user(self, user_id):
+        user = self.user_by_id(user_id)
+        return user.images.all()
+
+    # TODO: falta atualizar o user
+    def remove_image_from_user(self, user_id, image_id):
+        user = self.user_by_id(user_id)
+        image = user.images.filter_by(id=image_id).first()
+        if image:
+            self.db.session.delete(image)
+            self.db.session.commit()
+            return True
+        else:
+            return False
+
+    # TODO: falta atualizar o user
+    def update_image_for_user(self, user_id, image_id, new_name, new_type):
+        user = self.user_by_id(user_id)
+        image = user.images.filter_by(id=image_id).first()
+        if image:
+            image.name = new_name
+            image.type_image = new_type
+            self.db.session.merge(image)
+            self.db.session.commit()
+            return True
+        else:
+            return False
+
+    # TODO: criar um metodo que atualiza o profile
+    def get_image_profile_for_user(self, user_id, type_image):
+        user = self.user_by_id(user_id)
+        return user.images.filter_by(type_image=type_image).first()
