@@ -31,6 +31,6 @@ def profile():
     if 'username' not in session: 
         return redirect(url_for('login'))
 
-    usuario = userDAO.read_user_by_username(username=session['username'])
+    usuario = userDAO.user_by_username(username=session['username'])
     return render_template("dashboard/profile.html", usuario = session['username'], 
             profilePic="", titulo="Profile", nome=usuario.name, id=str(usuario.id), email=usuario.email)
