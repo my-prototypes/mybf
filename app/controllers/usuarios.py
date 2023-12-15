@@ -10,8 +10,13 @@ userDAO = UserDAO(db)
 
 usuarios_bp = Blueprint('user', __name__, template_folder='app/templates')
 
+@usuarios_bp.route("/usuarios")
+def listar_usuarios():
+    usuarios = userDAO.list_users()
+    return render_template('usuarios/listar_usuarios.html', usuarios=usuarios)
+
 @login_required
-@usuarios_bp.route("/usuario/<int:id>", methods=['GET', 'PUT'])
+@usuarios_bp.route("/usuarios/<int:id>", methods=['GET', 'PUT'])
 def update(id):    
     if request.method == "POST":
         username = request.form["username"]
