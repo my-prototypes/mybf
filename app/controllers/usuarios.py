@@ -39,7 +39,7 @@ def update(id):
             flash(message, 'success')
             return redirect(url_for("dashboard.profile"))
 
-    usuario = userDAO.read_user_by_username(username=session['username'])
+    usuario = userDAO.user_by_username(username=session['username'])
 
     return render_template("usuarios/imagem.html", usuario = session['username'], 
             profilePic="", titulo="Update image", usuario_logado=session['username'], nome=usuario.username)

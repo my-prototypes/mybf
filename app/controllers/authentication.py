@@ -15,7 +15,7 @@ auth_bp = Blueprint('auth', __name__, template_folder='app/templates')
 
 @login_manager.user_loader 
 def load_user(user_id):
-    return userDAO.read_user_by_id(user_id)
+    return userDAO.user_by_id(user_id)
 
 @login_manager.unauthorized_handler 
 def unauthorized_callback():
@@ -27,7 +27,7 @@ def login():
     if login_form.validate_on_submit():
         username = login_form.username.data
         password = login_form.password.data
-        user = userDAO.read_user_by_username(username)
+        user = userDAO.user_by_username(username)
         if not user:
             flash("That username does not exist, please try again.")
             return redirect(url_for('auth.login'))
@@ -58,7 +58,7 @@ def register():
         password = request.form["password"]
         error = None
         
-        resultado_busca = userDAO.read_user_by_username(username=username)
+        resultado_busca = userDAO.user_by_username(username=username)
 
         if not username:
             error = "Username is required."
