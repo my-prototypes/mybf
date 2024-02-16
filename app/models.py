@@ -17,3 +17,8 @@ class Image(db.Model):
     name = db.Column(db.String(250), nullable=False)
     type_image = db.Column(db.Integer)
     user_id = db.Column(db.Integer, db.ForeignKey("users.id"))
+
+class ImageProfile(db.Model):
+    __tablename__ = "image_profile"
+    user_id = db.Column(db.Integer, db.ForeignKey("users.id"), primary_key=True)  # Set as primary key
+    name = db.Column(db.String(250), nullable=False)

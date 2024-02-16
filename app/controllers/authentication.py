@@ -90,6 +90,7 @@ def register():
 # Pagina de recuperacao de e-mail
 @auth_bp.route("/forgot-password", methods=["GET"])
 def forgot():
+    flash("A funcionalidade de recuperacao de e-mail ainda não foi implementada.", category='danger')
     return render_template("auth/forgot-password.html")
 
 @auth_bp.route('/logout') 

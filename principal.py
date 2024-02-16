@@ -4,7 +4,6 @@ from app.extensions import db, login_manager
 from app.controllers.dashboard import dashboard_bp
 from app.controllers.authentication import auth_bp
 from app.controllers.usuarios import usuarios_bp
-from app.dao import UserDAO
 
 app = Flask(__name__, template_folder='app/templates')
 
@@ -14,6 +13,8 @@ app.config['SECRET_KEY'] = "python is the real deal !@#$%"
 app.config['SQLALCHEMY_DATABASE_URI'] = "sqlite:///users.db" 
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.static_folder = STATIC_PATH
+
+DROP_DATA_BASE = False
 
 # Initialize extensions
 db.init_app(app)
@@ -48,7 +49,11 @@ def hello():
 def create_tables():
     with app.app_context():
         print('Cria as tabelas do banco')
-        db.create_all()
+        if DROP_DATA_BASE: 
+            db.drop_all()
+            db.create_all()
+        else:
+            db.create_all()
         print('Tabelas criadas com sucesso!')
 
 create_tables()
