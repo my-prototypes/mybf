@@ -25,8 +25,6 @@ app.register_blueprint(dashboard_bp)
 app.register_blueprint(auth_bp)
 app.register_blueprint(usuarios_bp)
 
-userDAO = UserDAO(db)
-
 @app.route('/favicon.ico')
 def favicon():
     return send_from_directory(STATIC_PATH, 'favicon.ico', mimetype='image/vnd.microsoft.icon')
@@ -56,4 +54,4 @@ def create_tables():
 create_tables()
 
 if __name__=='__main__':
-    app.run()
+    app.run(debug=True)

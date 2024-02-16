@@ -29,8 +29,10 @@
       <p class="login-box-msg">Register a new membership</p>
 
       <form action="{{ url_for('auth.register') }}" method="post">
+        {{ form.hidden_tag() }}
         <div class="input-group mb-3">
-          <input type="text" class="form-control" placeholder="Full name" name="name">
+          <!--<input type="text" class="form-control" placeholder="Full name" name="name"> -->
+          {{ form.name(class="form-control", placeholder="Full Name") }}
           <div class="input-group-append">
             <div class="input-group-text">
               <span class="fas fa-user"></span>
@@ -38,7 +40,8 @@
           </div>
         </div>
         <div class="input-group mb-3">
-          <input type="text" class="form-control" placeholder="Username" name="username">
+          <!--<input type="text" class="form-control" placeholder="Username" name="username">-->
+          {{ form.username(class="form-control", placeholder="Username") }}
           <div class="input-group-append">
             <div class="input-group-text">
               <span class="fas fa-user"></span>
@@ -46,7 +49,8 @@
           </div>
         </div>      
         <div class="input-group mb-3">
-          <input type="email" class="form-control" placeholder="Email" name="email">
+          <!-- <input type="email" class="form-control" placeholder="Email" name="email"> -->
+          {{ form.email(class="form-control", placeholder="E-mail") }}
           <div class="input-group-append">
             <div class="input-group-text">
               <span class="fas fa-envelope"></span>
@@ -54,7 +58,8 @@
           </div>
         </div>
         <div class="input-group mb-3">
-          <input type="password" class="form-control" placeholder="Password" name="password">
+          <!-- <input type="password" class="form-control" placeholder="Password" name="password">-->
+          {{ form.password(class="form-control", placeholder="Passwod") }}
           <div class="input-group-append">
             <div class="input-group-text">
               <span class="fas fa-lock"></span>
@@ -62,7 +67,8 @@
           </div>
         </div>
         <div class="input-group mb-3">
-          <input type="password" class="form-control" placeholder="Retype password" name="repassword">
+          <!-- <input type="password" class="form-control" placeholder="Retype password" name="repassword"> -->
+          {{ form.password2(class="form-control", placeholder="Confirm Passwod") }}
           <div class="input-group-append">
             <div class="input-group-text">
               <span class="fas fa-lock"></span>
@@ -80,7 +86,8 @@
           </div>
           <!-- /.col -->
           <div class="col-4">
-            <button type="submit" class="btn btn-primary btn-block">Register</button>
+            <!-- <button type="submit" class="btn btn-primary btn-block">Register</button> -->
+            {{ form.submit(class="btn btn-block btn-primary") }}
           </div>
           <!-- /.col -->
         </div>
@@ -91,11 +98,10 @@
     <!-- /.form-box -->
   </div><!-- /.card -->
 
-  {% with messages = get_flashed_messages() %}
+  {% with messages = get_flashed_messages(with_categories=true) %}
     {% if messages %}
-    <div class="callout callout-danger">
-      {% for message in get_flashed_messages() %}
-        {{ message }}
+      {% for category, message in messages %}
+        <div class="callout callout-{{ category }}">{{ message }}</div>        
       {% endfor %}
   
     </div>  
