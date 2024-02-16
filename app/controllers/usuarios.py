@@ -5,15 +5,28 @@ from app.extensions import db
 from app.utils.utilidades import Constant
 import os
 from werkzeug.utils import secure_filename
+from PIL import Image
 
 # Evita importacao de dependencia circular
-from ..dao import UserDAO, ImageProfileDAO
-from ..models import Image, ImageProfile
+from ..dao import UserDAO, ImageProfileDAO, FilesDAO
+from ..models import ImageProfile, File
 
 userDAO = UserDAO(db)
 imageProfileDAO = ImageProfileDAO(db)
+fileDAO = FilesDAO(db)
 
 usuarios_bp = Blueprint('user', __name__, template_folder='app/templates')
+
+# dado um arquivo cria o thumbnail correspondente e salva na pasta de thumbnails
+def tnails(filename, filename_path, thumbnail_path):
+    try:
+        filename_complete = filename_path + '/' + filename
+        image = Image.open(filename_complete)
+        image.thumbnail((90,90))        
+        new_thumbnail = thumbnail_path + '/' + filename
+        image.save(new_thumbnail)
+    except IOError as io:
+        raise Exception(f'Erro - {io}')
 
 # Cria o diretorio do usuario caso nao exista
 def user_directory(path_temp, user_id, sub_folder=None):
@@ -75,3 +88,49 @@ def update_image(id):
         filename_picture = 'dist/img/anonymous2.png'
     return render_template("usuarios/imagem.html", usuario = session['username'], 
             profilePic="", titulo="Update image", usuario_logado=session['username'], id=id, nome=usuario.username, filename=filename_picture)
+
+@login_required
+@usuarios_bp.route("/usuarios/<int:id>/upload/imagem", methods=['GET', 'POST'])
+def upload_image(id):    
+    file_name_to_store = None
+    if request.method == "POST":
+        file_image = request.files["image"]
+        try:
+            # Pega o nome da imagem
+            file_name_to_store = secure_filename(file_image.filename)
+            print('Processamento do upload da imagem')
+            # Cria o diretorio de profile do usuario, caso ele nao exista
+            user_img_directory = user_directory(path_temp=Constant.PATH_UPLOADS, user_id=id)
+            path_to_save = user_img_directory + "/" + file_name_to_store
+            # Salva o arquivo no diretorio de uploads
+            file_image.save(path_to_save)
+            file_to_save = File(name=file_name_to_store)
+            fileDAO.insert_file(file_to_save)
+            path_to_save_image_thumbnail = user_directory(Constant.PATH_UPLOADS_THUMBNAILS, id)
+            tnails(file_name_to_store, user_img_directory, path_to_save_image_thumbnail)
+            userDAO.link_to_file(user_id=id, file=file_to_save)
+            print(f'Arquivo {file_name_to_store} salvo com sucesso!')
+            print(f'Local: {path_to_save}')
+        except:
+            error_processing_upload = "Erro no processamento do upload do processamento da imagem."
+            flash(error_processing_upload, 'danger')
+            return redirect(url_for("usuario.listar_usuarios"))
+
+    if file_name_to_store: 
+        filename_picture_upload = 'uploads' + '/' + str(id) + '/' + file_name_to_store
+    else:
+        filename_picture_upload = 'dist/img/no_image.png'
+
+    image_profile = imageProfileDAO.get_image_profile_for_user(id)
+
+    filename_picture = None
+    if image_profile: 
+        filename_picture = 'img' + '/' + str(id) + '/' + 'profile' + '/' + image_profile.name
+        print(f"filename_picture: {filename_picture}")
+    else: 
+        filename_picture = 'dist/img/anonymous2.png'
+
+    print(f"filename_picture: {filename_picture}")
+
+    return render_template("usuarios/upload_imagem.html", usuario=session['username'], 
+    titulo="Upload image", usuario_logado=session['username'], id=id, filename_uploaded=filename_picture_upload, filename=filename_picture)

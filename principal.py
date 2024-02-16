@@ -52,6 +52,7 @@ def create_tables():
         if DROP_DATA_BASE: 
             db.drop_all()
             db.create_all()
+            db.session.commit()
         else:
             db.create_all()
         print('Tabelas criadas com sucesso!')

@@ -17,12 +17,14 @@ def dashboard_page():
         return redirect(url_for('auth.login'))
 
     usuarios = userDAO.list_users()
-    imagens = []
-    quantidade_usuarios = len(usuarios)
+    usuario = userDAO.user_by_username(username=session['username'])
+    imagens = userDAO.list_all_files(usuario.id)
+
+    quantidade_usuarios = len(usuarios)    
     quantidade_imagens = len(imagens)
 
-    usuario = userDAO.user_by_username(username=session['username'])
     image_profile = imageProfileDAO.get_image_profile_for_user(usuario.id)
+    
     if image_profile: 
         filename_picture = 'img' + '/' + str(usuario.id) + '/' + 'profile' + '/' + image_profile.name
     else: 
@@ -32,7 +34,7 @@ def dashboard_page():
     return render_template("dashboard/starter.html", usuario = session['username'], 
             profilePic="", titulo="Dashboard", usuarios = usuarios, 
             imagens = imagens, quantidade_usuarios=quantidade_usuarios, 
-            quantidade_imagens=quantidade_imagens, filename=filename_picture) 
+            quantidade_imagens=quantidade_imagens, filename=filename_picture, id=usuario.id) 
 
 @login_required
 @dashboard_bp.route("/profile")
