@@ -1,4 +1,4 @@
-from .models import User, ImageProfile
+from .models import User, ImageProfile, File
 
 class UserDAO:
     def __init__(self, db):
@@ -28,17 +28,6 @@ class UserDAO:
     def list_users(self):
         return User.query.all()
 
-    # image = Image(name="MyImage.jpg", type_image=1)
-    # type 1 - profile
-    # type 2 - arquivos 
-    # user.images.append(image)
-    def add_image_to_user(self, user_id, image):
-        user = self.user_by_id(user_id)
-        image.user = user
-        self.db.session.add(image)
-        self.db.session.commit()
-        self.update_user(user)
-
     def add_profile_image_to_user(self, image):
         try: 
             if not self.imagesProfile.get_image_profile_for_user(image.user_id): 
@@ -50,38 +39,41 @@ class UserDAO:
         except ValueError:
             raise ValueError('Erro ao adicionar imagem de profile')
 
-    def get_all_images_for_user(self, user_id):
-        user = self.user_by_id(user_id)
-        return user.images.all()
-
-    # TODO: falta atualizar o user
-    def remove_image_from_user(self, user_id, image_id):
-        user = self.user_by_id(user_id)
-        image = user.images.filter_by(id=image_id).first()
-        if image:
-            self.db.session.delete(image)
+    def link_to_file(self, user_id, file):
+        try:
+            user = User.query.filter_by(id=user_id).first()
+            file = File.query.filter_by(id=file.id).first()
+            user.my_files.append(file)
             self.db.session.commit()
-            return True
-        else:
-            return False
+        except ValueError as ve:
+            raise ValueError(f'Error during file to user - {ve}')
 
-    # TODO: falta atualizar o user
-    def update_image_for_user(self, user_id, image_id, new_name, new_type):
-        user = self.user_by_id(user_id)
-        image = user.images.filter_by(id=image_id).first()
-        if image:
-            image.name = new_name
-            image.type_image = new_type
-            self.db.session.merge(image)
+    def link_to_files(self, user_id, files):
+        try:
+            user = User.query.filter_by(id=user_id).first()
+            for each in files:
+                file = File.query.filter_by(id=each.id).first()
+                user.my_files.append(file)    
             self.db.session.commit()
-            return True
-        else:
-            return False
+        except ValueError as ve:
+            raise ValueError(f'Error during files to user - {ve}')
 
-    def get_images_for_user(self, user_id, type_image):
-        user = self.user_by_id(user_id)
+    def unlink_file(self, user_id, file):
+        try:
+            user = User.query.filter_by(id=user_id).first()
+            file = File.query.filter_by(id=file.id).first()
+            user.my_files.remove(file)
+            self.db.session.commit()
+        except Exception as e:
+            raise Exception(f'Error during remove file from user - {e}')
 
-        return user.images.filter_by(type_image=type_image).first()
+    def list_all_files(self, user_id):
+        user = User.query.filter_by(id=user_id).first()        
+        return user.my_files
+
+    def get_file_by_user(self, name):        
+        return User.my_files.query.get(name)
+
 
 class ImageProfileDAO:
     def __init__(self, db):
@@ -97,3 +89,33 @@ class ImageProfileDAO:
     def get_all_image_profile(self):
         return ImageProfileDAO.query.all()
 
+
+class FilesDAO:
+    def __init__(self, db):
+        self.db = db
+
+    def insert_file(self, file):
+        try:
+            self.db.session.add(file)
+            self.db.session.commit()
+        except ValueError as ve:
+            raise ValueError(f'Error during insert file - {ve}')
+
+    def query_file_by_name(self, p_name):
+        file = File.query.filter_by(name=p_name).first()
+        return file
+
+    def query_file_by_id(self, p_id):
+        file = File.query.filter_by(id=p_id).first()
+        return file
+    
+    def list_all_files(self):
+        return File.query.all()
+
+    def delete_file(self, file):
+        try:
+            file = File.query.filter_by(id=file.id).first()
+            self.db.session.delete(file)
+            self.db.session.commit()
+        except ValueError as ve:
+            raise ValueError(f'Error during delete file - {ve}')

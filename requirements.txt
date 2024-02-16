@@ -3,3 +3,4 @@ Flask-Login
 Flask-SQLAlchemy
 Flask-WTF
 email_validator
+pillow==8.3.2

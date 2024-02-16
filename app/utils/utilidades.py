@@ -6,3 +6,4 @@ class Constant:
     PATH_STATIC = PATH_MYADMIN + '/app/static'
     PATH_IMG = PATH_MYADMIN + '/app/static/img'
     PATH_UPLOADS = PATH_MYADMIN + '/app/static/uploads'
+    PATH_UPLOADS_THUMBNAILS = PATH_MYADMIN + '/app/static/uploads/thumbnails'
