@@ -1,8 +1,9 @@
-from .models import User
+from .models import User, ImageProfile
 
 class UserDAO:
     def __init__(self, db):
         self.db = db
+        self.imagesProfile = ImageProfileDAO(db)
 
     def create_user(self, user):
         self.db.session.add(user)
@@ -38,6 +39,17 @@ class UserDAO:
         self.db.session.commit()
         self.update_user(user)
 
+    def add_profile_image_to_user(self, image):
+        try: 
+            if not self.imagesProfile.get_image_profile_for_user(image.user_id): 
+                self.db.session.add(image)
+                self.db.session.commit()
+            else:
+                self.db.session.merge(image)
+                self.db.session.commit()
+        except ValueError:
+            raise ValueError('Erro ao adicionar imagem de profile')
+
     def get_all_images_for_user(self, user_id):
         user = self.user_by_id(user_id)
         return user.images.all()
@@ -66,7 +78,22 @@ class UserDAO:
         else:
             return False
 
-    # TODO: criar um metodo que atualiza o profile
-    def get_image_profile_for_user(self, user_id, type_image):
+    def get_images_for_user(self, user_id, type_image):
         user = self.user_by_id(user_id)
+
         return user.images.filter_by(type_image=type_image).first()
+
+class ImageProfileDAO:
+    def __init__(self, db):
+        self.db = db
+
+    def create_image_profile(self, image):
+        self.db.session.add(image)
+        self.db.session.commit()
+
+    def get_image_profile_for_user(self, user_id):
+        return ImageProfile.query.get(user_id)
+
+    def get_all_image_profile(self):
+        return ImageProfileDAO.query.all()
+

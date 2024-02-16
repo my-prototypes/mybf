@@ -4,9 +4,10 @@ from flask_login import login_required
 from app.extensions import db
 
 # Evita importacao de dependencia circular
-from ..dao import UserDAO
+from ..dao import UserDAO, ImageProfileDAO
 
 userDAO = UserDAO(db)
+imageProfileDAO = ImageProfileDAO(db)
 
 dashboard_bp = Blueprint('dashboard', __name__, template_folder='app/templates')
 
@@ -21,8 +22,7 @@ def dashboard_page():
     quantidade_imagens = len(imagens)
 
     usuario = userDAO.user_by_username(username=session['username'])
-    profile = 1
-    image_profile = userDAO.get_image_profile_for_user(usuario.id, profile)
+    image_profile = imageProfileDAO.get_image_profile_for_user(usuario.id)
     if image_profile: 
         filename_picture = 'img' + '/' + str(usuario.id) + '/' + 'profile' + '/' + image_profile.name
     else: 
@@ -41,8 +41,7 @@ def profile():
         return redirect(url_for('login'))
 
     usuario = userDAO.user_by_username(username=session['username'])
-    profile = 1
-    image_profile = userDAO.get_image_profile_for_user(usuario.id, profile)
+    image_profile = imageProfileDAO.get_image_profile_for_user(usuario.id)
     if image_profile: 
         filename_picture = 'img' + '/' + str(usuario.id) + '/' + 'profile' + '/' + image_profile.name
     else: 
