@@ -85,7 +85,7 @@ Segue uma breve descrição dos diretórios e arquivos:
 
 ![Use Cases](docs/usecases.png)
 
-[Detalhamento](https://github.com/my-prototypes/tflk/blob/main/docs/Casos_de_Uso_MyImages.pdf)
+[Detalhamento](https://github.com/my-prototypes/mybf/blob/main/docs/Casos_de_Uso_MyImages.pdf)
 
 # D. Visão Geral da Arquitetura
 
