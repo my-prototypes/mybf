@@ -185,3 +185,16 @@ Aqui estão as principais tecnologias e frameworks utilizados na aplicação:
 
 Essas são as principais tecnologias e frameworks utilizados na aplicação. Cada uma desempenha um papel importante na construção e funcionamento da aplicação web Flask, desde o framework Flask em si até as linguagens de marcação utilizadas para criar as páginas web.
 
+## Configurações do projeto
+
+**Secret Key**: A configuração da chave secreta (app.secret_key) é fundamental para a segurança da aplicação. Ela é utilizada para assinar as sessões e proteger os dados sensíveis armazenados nelas. Certifique-se de definir uma chave secreta forte e única para cada ambiente de implantação da aplicação.
+
+**Banco de Dados**: A aplicação utiliza o SQLite como banco de dados embutido. Certifique-se de ajustar as configurações do banco de dados de acordo com as necessidades da aplicação, como nome do arquivo de banco de dados e localização.
+Autenticação e Autorização: A aplicação implementa um sistema de autenticação básico utilizando nome de usuário e senha. É importante considerar a segurança nessa área, como o armazenamento seguro das senhas (por exemplo, utilizando hash e [salt](https://en.wikipedia.org/wiki/Salt_(cryptography))) e o uso de medidas adicionais, como limitação de tentativas de login e proteção contra ataques de força bruta.
+
+**Proteção CSRF**: É importante adicionar proteção [CSRF](https://en.wikipedia.org/wiki/Cross-site_request_forgery) (Cross-Site Request Forgery) nas rotas que modificam dados sensíveis ou realizam operações destrutivas. O Flask possui recursos embutidos para lidar com CSRF, como o uso do token CSRF na geração de formulários.
+
+**Configurações de Ambiente**: Considere utilizar configurações de ambiente para separar as configurações específicas de cada ambiente, como desenvolvimento, produção e teste. Isso permite que a aplicação seja facilmente configurada em diferentes ambientes sem a necessidade de modificar o código fonte.
+
+**Controle de Acesso**: Além da [autenticação](https://en.wikipedia.org/wiki/Authentication), é importante considerar o [controle de acesso](https://en.wikipedia.org/wiki/Authorization) em nível de permissões de usuário. Isso pode envolver a definição de papéis de usuário (por exemplo, administrador, usuário comum) e a restrição de acesso a determinadas funcionalidades ou recursos com base nas permissões associadas a cada papel.
+
