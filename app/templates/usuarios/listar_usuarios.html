@@ -1,14 +1,44 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Lista de Usuários</title>
-</head>
-<body>
-    <h1>Lista de Usuários</h1>
-    <ul>
-    {% for usuario in usuarios %}
-        <li>{{ usuario.id }} - {{ usuario.name }} - {{ usuario.email }} - {{ usuario.username }}</li>
-    {% endfor %}
-    </ul>
-</body>
-</html>
+{% extends "base.html" %}
+{% block conteudo %}
+
+    <!-- Main content -->
+    <div class="content">
+
+      <section class="content">
+
+        <div class="container-fluid">
+          <div class="row">
+            <div class="col-md-12">
+              <div class="card card-primary">
+                <div class="card-header">
+                  <h3 class="card-title">Lista de Usuários</h3>
+                </div>
+
+                <div class="table-responsive">
+                  <table class="table table-hover">
+                    <thead>
+                      <tr>
+                        <th>Nome</th>   
+                        <th>Email</th>       
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {% for usuario in usuarios %}
+                      <tr>
+                        <td>{{ usuario.name }}</td>  
+                        <td>{{ usuario.email }}</td>
+                      </tr>
+                      {% endfor %}
+                    </tbody>
+                  </table>
+                </div>
+                
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </section>
+
+    </div>
+{% endblock %}
