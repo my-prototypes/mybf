@@ -1,6 +1,6 @@
-Flask
-Flask-Login
-Flask-SQLAlchemy
-Flask-WTF
-email_validator
+Flask==3.0.2
+Flask-Login==0.6.3
+Flask-SQLAlchemy==3.1.1
+Flask-WTF==1.2.1
+email_validator==2.1.0.post1
 pillow==8.3.2
