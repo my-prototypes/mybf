@@ -1,5 +1,5 @@
 from flask import Blueprint
-from flask import session, redirect, url_for, render_template, request, flash
+from flask import session, redirect, url_for, render_template, request, flash, send_from_directory
 from flask_login import login_required
 from app.extensions import db
 from app.utils.utilidades import Constant
@@ -134,3 +134,27 @@ def upload_image(id):
 
     return render_template("usuarios/upload_imagem.html", usuario=session['username'], 
     titulo="Upload image", usuario_logado=session['username'], id=id, filename_uploaded=filename_picture_upload, filename=filename_picture)
+
+@login_required
+@usuarios_bp.route("/usuarios/<int:id>/imagens", methods=['GET'])
+def lista_imagens_por_usuario(id):
+    todas_as_imagens = userDAO.list_all_files(id)
+    id = str(id)
+    
+    filename_picture = None
+    usuario = userDAO.user_by_username(username=session['username'])
+    image_profile = imageProfileDAO.get_image_profile_for_user(usuario.id)
+    if image_profile: 
+        filename_picture = 'img' + '/' + str(usuario.id) + '/' + 'profile' + '/' + image_profile.name
+    else: 
+        filename_picture = 'dist/img/anonymous2.png'
+
+    return render_template("usuarios/listar_imagens.html", titulo="Minhas Imagens", usuario=session['username'], usuario_logado=session['username'], id=id, images=todas_as_imagens, filename=filename_picture)
+
+# http://localhost:5000/usuarios/5/download/imagem/armando.jpeg
+@login_required
+@usuarios_bp.route('/usuarios/<int:id>/download/imagem/<name>')
+def download_file(id, name):
+    path_to_save_image = user_directory(Constant.PATH_UPLOADS, str(id))
+    return send_from_directory(path_to_save_image, name)
+
