@@ -83,9 +83,9 @@ Segue uma breve descrição dos diretórios e arquivos:
 
 # C. Casos de Uso da Aplicação
 
-<!-- [](docs/usecases.png) -->
+![Use Cases](docs/usecases.png)
 
-<!-- [Detalhamento](https://github.com/my-prototypes/tflk/blob/main/docs/Casos_de_Uso_MyImages.pdf) -->
+[Detalhamento](https://github.com/my-prototypes/tflk/blob/main/docs/Casos_de_Uso_MyImages.pdf)
 
 # D. Visão Geral da Arquitetura
 
@@ -119,8 +119,8 @@ Componentes da Aplicação (Web Application)
 ```
 @startuml
 package "App" <<Cloud>> {
-  [Controllers]
   [Templates]
+  [Controllers]
   [DAO]
   [Models]
 }
