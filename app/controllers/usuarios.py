@@ -44,7 +44,20 @@ def user_directory(path_temp, user_id, sub_folder=None):
 @usuarios_bp.route("/usuarios")
 def listar_usuarios():
     usuarios = userDAO.list_users()
-    return render_template('usuarios/listar_usuarios.html', usuarios=usuarios)
+    user = userDAO.user_by_username(session['username'])
+    image_profile = imageProfileDAO.get_image_profile_for_user(user.id)
+
+    id = str(user.id)
+
+    filename_picture = None
+    if image_profile: 
+        filename_picture = 'img' + '/' + id + '/' + 'profile' + '/' + image_profile.name
+        print(f"filename_picture: {filename_picture}")
+    else: 
+        filename_picture = 'dist/img/anonymous2.png'
+
+    return render_template('usuarios/listar_usuarios.html', usuarios=usuarios, usuario=session['username'], 
+    titulo="Lista de Usuários", usuario_logado=session['username'], id=id, filename=filename_picture)
 
 @login_required
 @usuarios_bp.route("/usuarios/<int:id>/profile/imagem", methods=['GET', 'POST'])
